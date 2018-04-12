@@ -22,8 +22,8 @@ class AlbumList extends Component {
 
   renderSearchBar()
   {
-    if(Platform.OS !== 'web' && this.props.albums.length)
-    {
+   // if(Platform.OS !== 'web' && this.props.albums.length > 0)
+   // {
       return (
           <SearchBar
               lightTheme
@@ -34,7 +34,7 @@ class AlbumList extends Component {
               placeholder='Search an album...'
           />
       );
-    }
+   // }
   }
   render() {
     //console.log('rendering album list: '+this.props.albu);
