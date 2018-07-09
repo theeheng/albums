@@ -2,19 +2,19 @@ import React, { Component } from 'react';
 import { View, ScrollView, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import { SearchBar } from 'react-native-elements';
-import { fetchAlbums } from '../../../actions';
+import { fetchAlbums, searchAlbums, searchChanged } from '../../../actions';
 import AlbumDetail from './AlbumDetail';
 
 class AlbumList extends Component {
-  state = { albums: [] };
+  state = { results: [] };
 
   componentWillMount() {
     this.props.fetchAlbums();
     }
 
   renderAlbums() {
-    if(this.props.albums.length > 0) {
-        return this.props.albums.map(album =>
+    if(this.props.results.length > 0) {
+        return this.props.results.map(album =>
             <AlbumDetail key={album.title} album={album}/>
         );
     }
@@ -28,9 +28,10 @@ class AlbumList extends Component {
           <SearchBar
               lightTheme
               autoCorrect={false}
-              // onChangeText={this.onSearchChange}
-              // showLoadingIcon={this.state.isLoading}
-              // value={this.state.filter}
+               onChangeText={ value => this.props.searchChanged(value) }
+              showLoadingIcon={this.props.loading}
+              onSubmitEditing={ value => this.props.searchAlbums(this.props.searchString) }
+               value={this.props.searchString}
               placeholder='Search an album...'
           />
       );
@@ -54,10 +55,10 @@ class AlbumList extends Component {
 }
 
 const mapStateToProps = state => {
-  const albums = state.albumReducer;
+  const { results, loading, searchString } = state.albumReducer;
 
-  console.log('map state albums'+albums);
-  return { albums };
+  console.log('map state albums size: '+results.length);
+  return { results, loading, searchString };
 };
 
-export default connect(mapStateToProps, { fetchAlbums })(AlbumList);
+export default connect(mapStateToProps, { fetchAlbums, searchAlbums, searchChanged })(AlbumList);
